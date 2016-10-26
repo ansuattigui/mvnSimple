@@ -18,6 +18,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  * FXML Controller class
@@ -30,6 +31,9 @@ public class SimpleMainController implements Initializable {
     @FXML private Accordion menuPrincipal;
     @FXML private TitledPane tpaneAgenda;
     @FXML private Button btnAgenda;
+    
+    @Inject
+    FXMLLoader loader;
 
     /**
      * Initializes the controller class.
@@ -45,10 +49,13 @@ public class SimpleMainController implements Initializable {
     private void btnAgendaFired(ActionEvent event) {
     }
     
+    
+    
     public Scene sceneShow() throws IOException {
-        FXMLLoader loader;        
-        loader = new FXMLLoader(getClass().getResource("/view/simpleMain.fxml"));
-        Parent root = (Parent)loader.load();        
+//        FXMLLoader loader;    
+        
+//        loader = new FXMLLoader(getClass().getResource("/view/simpleMain.fxml"));
+        Parent root = (Parent)loader.load(getClass().getResource("/view/simpleMain.fxml"));        
         Scene scene = new Scene(root);        
         return scene;
     }
