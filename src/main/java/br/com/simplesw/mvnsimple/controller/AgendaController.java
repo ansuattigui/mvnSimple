@@ -5,10 +5,14 @@
  */
 package br.com.simplesw.mvnsimple.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
@@ -16,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  * FXML Controller class
@@ -62,6 +67,11 @@ public class AgendaController implements Initializable {
     private TextField telefoneII;
     @FXML
     private TextArea observacoes;
+    
+    @Inject    
+    public AgendaController() {
+        
+    }
 
     /**
      * Initializes the controller class.
@@ -69,6 +79,13 @@ public class AgendaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+    }    
+    
+    
+    public Scene sceneShow() throws IOException {
+        Parent root = (Parent)FXMLLoader.load(getClass().getResource("/view/Agenda.fxml"));        
+        Scene scene = new Scene(root);        
+        return scene;
     }    
     
     
