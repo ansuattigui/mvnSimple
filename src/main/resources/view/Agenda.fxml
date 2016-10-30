@@ -80,7 +80,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Label alignment="CENTER" prefWidth="500.0" text="Data Por Extenso" />
+                              <Label fx:id="lblDataPorExtenso" alignment="CENTER" prefWidth="500.0" text="Data Por Extenso" />
                               <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Button">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" smooth="false">
@@ -104,9 +104,6 @@
             <TableColumn editable="false" minWidth="-Infinity" prefWidth="34.0" resizable="false" sortable="false" text="ECG" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
                                     <TableColumn maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
               </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
             </TableView>
                            </content>
                         </TitledPane>
@@ -187,7 +184,7 @@
       <Insets />
       </VBox.margin>
       <children>
-                              <CalendarPicker />
+                              <CalendarPicker fx:id="calendario" />
                               <HBox alignment="CENTER" prefHeight="35.0" prefWidth="230.0" spacing="8.0" stylesheets="@../../../../../jMedico/src/com/br/ralfh/medico/css/Agenda.css">
       <children>
                                     <RadioButton fx:id="rbTodos" mnemonicParsing="false" selected="true" text="Todos">

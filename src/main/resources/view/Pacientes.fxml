@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import jidefx.scene.control.field.DateField?>
+<?import jidefx.scene.control.field.FormattedTextField?>
+
+<AnchorPane prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.ralfh.medico.PacienteController">
+<children>
+<VBox AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+<VBox alignment="CENTER" AnchorPane.bottomAnchor="404.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children><MenuBar VBox.vgrow="NEVER" xmlns:fx="http://javafx.com/fxml">
+  <menus>
+    <Menu mnemonicParsing="false" text="Paciente">
+      <items><MenuItem fx:id="miCriarPaciente" mnemonicParsing="false" text="Criar" /><MenuItem fx:id="miAtualPaciente" mnemonicParsing="false" text="Atualizar" /><SeparatorMenuItem mnemonicParsing="false" /><MenuItem fx:id="miDelPaciente" mnemonicParsing="false" text="Deletar" /><SeparatorMenuItem mnemonicParsing="false" /><MenuItem fx:id="miConfPaciente" mnemonicParsing="false" text="Confirma" /><MenuItem fx:id="miCancPaciente" mnemonicParsing="false" text="Cancela" /><SeparatorMenuItem mnemonicParsing="false" /><MenuItem fx:id="miProcPaciente" mnemonicParsing="false" text="Procurar" /><SeparatorMenuItem mnemonicParsing="false" />
+        <MenuItem fx:id="miSairPaciente" mnemonicParsing="false" text="Sair" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Editar">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Delete" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Ajuda">
+      <items>
+        <MenuItem mnemonicParsing="false" text="About" />
+      </items>
+    </Menu>
+  </menus>
+</MenuBar><ToolBar VBox.vgrow="NEVER" xmlns:fx="http://javafx.com/fxml">
+  <items>
+    <Button fx:id="btnCriar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#criaPacienteFired" text="Criar">
+<graphic><ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/paciente-add.png" />
+                                 </image></ImageView>
+</graphic></Button><Button fx:id="btnAtualizar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#atualizaPacienteFired" text="Atualizar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../img/paciente-edit.png" />
+</image>
+</ImageView>
+</graphic>
+</Button><Button fx:id="btnDeletar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnDelPacienteFired" text="Deletar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../img/paciente-delete.png" />
+</image>
+</ImageView>
+</graphic>
+</Button><Separator opacity="0.0" prefWidth="5.0" /><Button fx:id="btnConfirmar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#confPacienteFired" text="Confirma" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../img/paciente-check.png" />
+</image>
+</ImageView>
+</graphic>
+</Button><Button fx:id="btnCancelar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#cancPacienteFired" text="Cancela" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../img/paciente-restrict.png" />
+</image>
+</ImageView>
+</graphic>
+</Button><Separator opacity="0.0" prefWidth="5.0" />
+<Button fx:id="btnProcurar" contentDisplay="GRAPHIC_ONLY" layoutX="403.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnProcurarFired" text="Apagar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../img/paciente-search.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+                        <Separator layoutX="365.0" layoutY="10.0" opacity="0.0" prefWidth="300.0" /><Button fx:id="btnSair" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#sairFired" text="Sair" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../img/Door-Out.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+  </items>
+<VBox.margin>
+<Insets bottom="2.0" />
+</VBox.margin>
+</ToolBar>
+</children>
+</VBox><VBox>
+<children>
+<HBox fillHeight="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+                              <HBox spacing="4.0">
+                                 <children>
+                                    <VBox fillWidth="false" spacing="4.0">
+<children>
+<Label text="Numero" />
+                                          <HBox spacing="2.0">
+<children>
+<TextField fx:id="id" alignment="CENTER" maxWidth="70.0" />
+                                                <Button fx:id="btnProcuraId" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcCodAntFired" styleClass="botaopq" text="Button" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/find.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+</children>
+                                          </HBox>
+</children>
+</VBox>
+                                    <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Nome" />
+                                          <HBox spacing="2.0">
+<children>
+<TextField fx:id="nome" prefWidth="300.0" />
+                                                <Button fx:id="btnProcuraNome" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcNomeFired" styleClass="botaopq" text="Button" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/find.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+</children>
+                                          </HBox>
+</children>
+</VBox>
+                                 </children>
+                              </HBox>
+                              <HBox spacing="4.0">
+                                 <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Sexo" />
+                                          <ChoiceBox fx:id="sexo" prefWidth="150.0" xmlns:fx="http://javafx.com/fxml" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Nascimento" />
+                                          <DateField fx:id="nascimento" popupButtonVisible="true" prefWidth="120.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Idade" />
+<TextField fx:id="idade" alignment="CENTER" editable="false" prefWidth="40.0" />
+</children>
+</VBox>
+                                    <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Etnia" />
+<ChoiceBox fx:id="etnia" prefWidth="130.0" />
+</children>
+</VBox>
+                                 </children>
+                              </HBox>
+                              <HBox spacing="4.0">
+                                 <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Naturalidade" />
+                                          <ComboBox fx:id="naturalidade" editable="true" prefWidth="180.0" xmlns:fx="http://javafx.com/fxml" />
+</children>
+</VBox>
+                                    <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Nacionalidade" />
+<ComboBox fx:id="nacionalidade" editable="true" prefWidth="130.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Estado Civil" />
+<ChoiceBox fx:id="estadocivil" prefWidth="130.0" />
+</children>
+</VBox>
+                                 </children>
+                              </HBox>
+                              <HBox spacing="4.0">
+                                 <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Profissão" />
+                                          <TextField fx:id="profissao" prefWidth="190.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="RG" />
+                                          <TextField fx:id="rg" alignment="CENTER" prefWidth="130.0" />
+</children>
+</VBox>
+                                    <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="CPF" />
+<TextField fx:id="cpf" alignment="CENTER" prefWidth="120.0" />
+</children>
+</VBox>
+                                 </children>
+                              </HBox>
+                              <HBox spacing="4.0">
+                                 <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Convênio" />
+                                          <ComboBox fx:id="convenio" prefWidth="200.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Matricula" />
+<TextField fx:id="matricula" alignment="CENTER" prefWidth="200.0" />
+</children>
+</VBox>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="60.0" spacing="4.0">
+                                 <VBox.margin>
+                                    <Insets top="2.0" />
+                                 </VBox.margin>
+                              </HBox>
+</children>
+<HBox.margin>
+<Insets right="55.0" />
+</HBox.margin>
+</VBox><VBox alignment="TOP_CENTER" fillWidth="false" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+<VBox alignment="CENTER" fillWidth="false" style="-fx-border-color: blue; -fx-border-radius: 5; -fx-border-style: dashed; -fx-border-width: 0.3;" VBox.vgrow="NEVER">
+<children>
+<ImageView fx:id="fotografia" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
+</children>
+<padding>
+<Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+</padding>
+</VBox>
+<Button fx:id="btnFotografar" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="109.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnFotografarFired" styleClass="botaopq" text="Fotografar">
+<graphic>
+<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/Webcam.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+</children>
+<padding>
+<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+</padding>
+<HBox.margin>
+<Insets top="15.0" />
+</HBox.margin>
+</VBox>
+</children>
+<VBox.margin>
+<Insets />
+</VBox.margin>
+<padding>
+<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+</padding>
+</HBox>
+                  <VBox>
+                     <children>
+                        <TabPane tabClosingPolicy="UNAVAILABLE">
+  <tabs>
+    <Tab text="Endereço">
+      <content>
+        <AnchorPane>
+<children>
+<VBox alignment="TOP_CENTER" layoutY="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+                                                <HBox spacing="4.0">
+                                                   <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Endereço" />
+                                                            <TextField fx:id="endereco" prefWidth="330.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Nº" />
+                                                            <TextField fx:id="numero" alignment="CENTER" prefWidth="60.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children>
+</VBox>
+                                                   </children>
+                                                </HBox>
+                                                <HBox spacing="4.0">
+                                                   <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Complemento" />
+                                                            <TextField fx:id="complemento" alignment="CENTER" prefWidth="120.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Bairro" />
+<TextField fx:id="bairro" alignment="CENTER" prefWidth="165.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="CEP" />
+                                                            <HBox spacing="2.0">
+                                                               <children>
+                                                                  <FormattedTextField fx:id="cep" prefWidth="110.0" />
+                                                                  <Button fx:id="btnProcuraCep" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcCepFired" styleClass="botaopq" text="Button">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/find.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </HBox>
+</children>
+</VBox>
+                                                   </children>
+                                                </HBox>
+                                                <HBox spacing="4.0">
+                                                   <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Cidade" />
+<TextField fx:id="cidade" alignment="CENTER" prefWidth="200.0" />
+</children>
+</VBox>
+                                                      <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="UF" />
+                                                            <ComboBox fx:id="uf" editable="true" prefWidth="80.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children>
+</VBox>
+                                                   </children>
+                                                </HBox>
+</children>
+</VBox>
+</children>
+                                    </AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Telefones / email">
+      <content>
+        <AnchorPane>
+<children>
+<VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children>
+                                                <HBox spacing="6.0">
+                                                   <children>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Telefone res." />
+<TextField fx:id="telresidencial" alignment="CENTER" prefWidth="150.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Telefone com." />
+<TextField fx:id="telcomercial" alignment="CENTER" prefWidth="150.0" />
+</children>
+</VBox>
+<VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="Celular" />
+<TextField fx:id="telcelular" alignment="CENTER" prefWidth="150.0" />
+</children>
+</VBox>
+                                                   </children>
+                                                </HBox>
+                                                <HBox spacing="4.0">
+                                                   <children>
+                                                      <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+<children>
+<Label text="email" />
+<TextField fx:id="email" alignment="CENTER" prefWidth="300.0" />
+</children>
+</VBox>
+                                                   </children>
+                                                </HBox>
+</children>
+                                             <padding>
+                                                <Insets left="5.0" />
+                                             </padding>
+</VBox>
+</children>
+                                    </AnchorPane>
+      </content>
+    </Tab>
+                              <Tab text="Indicação / Status">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                                             <children>
+                                                <HBox spacing="6.0">
+                                                   <children>
+                                                      <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+                                                         <children>
+                                                            <Label text="Indicação" />
+                                                            <TextField fx:id="indicacao" alignment="CENTER" prefWidth="200.0" />
+                                                         </children>
+                                                      </VBox>
+                                                      <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+                                                         <children>
+                                                            <Label text="Status" />
+                                                            <ComboBox fx:id="status" editable="true" prefWidth="130.0" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </HBox>
+                                                <HBox layoutX="15.0" layoutY="15.0" spacing="6.0">
+                                                   <children>
+                                                      <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
+                                                         <children>
+                                                            <Label text="Situação Cadastral" />
+                                                            <ChoiceBox fx:id="cadastro" prefWidth="150.0" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                             <padding>
+                                                <Insets left="5.0" top="5.0" />
+                                             </padding>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+  </content>
+</Tab>
+  </tabs>
+<padding>
+<Insets left="10.0" right="10.0" top="10.0" />
+</padding>
+</TabPane>
+                        <ToolBar>
+                          <items>
+                            <Button fx:id="btnFichaMedica" mnemonicParsing="false" text="Ficha Médica" />
+                              <Button fx:id="btnAtestados" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" text="Atestados" />
+                              <Button fx:id="btnReceitas" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" text="Receitas" />
+                              <Button fx:id="btnRecibos" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" text="Recibos" />
+                          </items>
+                        </ToolBar>
+                     </children>
+                  </VBox>
+</children>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin></VBox>
+</children>
+</VBox>
+</children></AnchorPane>

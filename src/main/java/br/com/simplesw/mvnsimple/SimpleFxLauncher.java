@@ -6,10 +6,9 @@
 package br.com.simplesw.mvnsimple;
 
 import br.com.simplesw.mvnsimple.controller.SimpleMainController;
+import br.com.simplesw.mvnsimple.util.CdiContext;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 
 /**
  *
@@ -17,7 +16,7 @@ import org.jboss.weld.environment.se.WeldContainer;
  */
 public class SimpleFxLauncher extends Application {
     
-    private Weld weld;
+    //private Weld weld;
     
     /**
      * @param args the command line arguments
@@ -29,19 +28,24 @@ public class SimpleFxLauncher extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        this.weld = new Weld();
-        WeldContainer weldContainer = weld.initialize();
+        //this.weld = new Weld();
+        //WeldContainer weldContainer = weld.initialize();
         
-        SimpleMainController controller = weldContainer.instance().select(SimpleMainController.class).get();
+        CdiContext context = CdiContext.INSTANCE;
+
+        //Get an isntance of the bean from the context
+        SimpleMainController controller = context.getBean(SimpleMainController.class);
+        
+//        SimpleMainController controller = weldContainer.instance().select(SimpleMainController.class).get();
         
         primaryStage.setTitle("Simple");
-        primaryStage.setScene(controller.sceneShow());
+        primaryStage.setScene(controller.sceneShow(null));
         primaryStage.show();
     }
 
     @Override
     public void stop() throws Exception {
-        weld.shutdown();
+     //   weld.shutdown();
         super.stop();
     }    
     

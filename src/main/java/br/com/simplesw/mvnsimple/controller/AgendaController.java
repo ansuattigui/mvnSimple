@@ -5,22 +5,25 @@
  */
 package br.com.simplesw.mvnsimple.controller;
 
+import static br.com.simplesw.mvnsimple.util.DateUtil.calendarToExtenso;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import jfxtras.scene.control.CalendarPicker;
 
 /**
  * FXML Controller class
@@ -28,66 +31,67 @@ import javax.inject.Inject;
  * @author ralfh
  */
 
-@ApplicationScoped
-public class AgendaController implements Initializable {
 
-    @FXML
-    private TextField consMarcadas;
-    @FXML
-    private TextField consAtendidas;
-    @FXML
-    private TextField numEncaixes;
-    @FXML
-    private TextField numPVez;
-    @FXML
-    private TextField numECG;
-    @FXML
-    private VBox vbCalendar;
-    @FXML
-    private RadioButton rbTodos;
-    @FXML
-    private ToggleGroup tgHorarios;
-    @FXML
-    private RadioButton rbOcupados;
-    @FXML
-    private RadioButton rbLivres;
-    @FXML
-    private Button btnCadastro;
-    @FXML
-    private TextField codigo;
-    @FXML
-    private TextField codigoant;
-    @FXML
-    private TextField evento;
-    @FXML
-    private TextField nomeConvenio;
-    @FXML
-    private TextField telefoneI;
-    @FXML
-    private TextField telefoneII;
-    @FXML
-    private TextArea observacoes;
+//@ApplicationScoped
+public class AgendaController extends FxmlController {
+    
+    private final String FXMLPath = "/view/Agenda.fxml";
+    
+    private SimpleObjectProperty<String> calendarioExtenso;
+    
+    @FXML public Label lblDataPorExtenso;    
+    @FXML public TextField consMarcadas;
+    @FXML public TextField consAtendidas;
+    @FXML public TextField numEncaixes;
+    @FXML public TextField numPVez;
+    @FXML public TextField numECG;
+    @FXML public VBox vbCalendar;
+    @FXML public RadioButton rbTodos;
+    @FXML public ToggleGroup tgHorarios;
+    @FXML public RadioButton rbOcupados;
+    @FXML public RadioButton rbLivres;
+    @FXML public Button btnCadastro;
+    @FXML public TextField codigo;
+    @FXML public TextField codigoant;
+    @FXML public TextField evento;
+    @FXML public TextField nomeConvenio;
+    @FXML public TextField telefoneI;
+    @FXML public TextField telefoneII;
+    @FXML public TextArea observacoes;
+    
+    @FXML public CalendarPicker calendario;
     
     @Inject    
-    public AgendaController() {
-        
+    public AgendaController() {        
     }
-
-    /**
-     * Initializes the controller class.
-     */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        calendarioExtenso = new SimpleObjectProperty<>();
+        initCalendario();     
+        calendario.setCalendar(Calendar.getInstance());
+        dataPorExtensoBindCalendar();
     }    
     
+    @Override
+    public Scene sceneShow(String FxmlPath) throws IOException {        
+        return super.sceneShow(FXMLPath);
+    }
     
-    public Scene sceneShow() throws IOException {
-        Parent root = (Parent)FXMLLoader.load(getClass().getResource("/view/Agenda.fxml"));        
-        Scene scene = new Scene(root);        
-        return scene;
-    }    
+    private void dataPorExtensoBindCalendar() {
+        lblDataPorExtenso.textProperty().bind(calendarioExtenso.asString());
+    }
     
+    public void initCalendario() {  
+        calendario.calendarProperty().addListener(new ChangeListener() {
+        @Override
+        public void changed(ObservableValue o,Object oldVal,Object newVal) {
+            if (calendario.calendarProperty().getValue() != null) {
+                calendarioExtenso.set(calendarToExtenso(calendario.calendarProperty().getValue()));
+            } 
+        }
+        });        
+    }
     
     
 }
