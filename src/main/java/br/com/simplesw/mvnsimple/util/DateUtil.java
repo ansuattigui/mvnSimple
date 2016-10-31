@@ -6,7 +6,12 @@
 package br.com.simplesw.mvnsimple.util;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
@@ -19,5 +24,13 @@ public class DateUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");  
         return formatter.format(calendar.getTime());        
     }
+    
+    //Converte Date em LocalDate
+    public static LocalDate ld(Date pDate) {        
+        Instant instant = Instant.ofEpochMilli(pDate.getTime());
+        LocalDate ld = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();        
+        return ld;
+    }
+    
     
 }

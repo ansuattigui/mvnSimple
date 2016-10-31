@@ -35,16 +35,27 @@ public class SimpleMainController extends FxmlController {
     }
     
     @FXML
-    private void btnAgendaFired(ActionEvent event) throws IOException {
+    public void btnAgendaFired(ActionEvent event) throws IOException {
         
         CdiContext context = CdiContext.INSTANCE;
-        AgendaController agendaController = context.getBean(AgendaController.class);        
+        AgendaController controller = context.getBean(AgendaController.class);        
         
         Stage stage = new Stage();
         stage.setTitle("Simple");
-        stage.setScene(agendaController.sceneShow(null));
+        stage.setScene(controller.sceneShow(null));
         stage.show();
-
     }    
 
+    @FXML
+    public void btnPacientesFired(ActionEvent event) throws IOException {
+        
+        CdiContext context = CdiContext.INSTANCE;
+        PacienteController controller = context.getBean(PacienteController.class);        
+        
+        Stage stage = new Stage();
+        stage.setTitle("Simple");
+        stage.setScene(controller.sceneShow(null));
+        stage.show();
+    }    
+    
 }

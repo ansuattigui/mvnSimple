@@ -60,7 +60,7 @@
 </image>
 </ImageView>
 </graphic>
-</Button><Button fx:id="btnDeletar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnDelPacienteFired" text="Deletar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+</Button><Button fx:id="btnDeletar" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#delPacienteFired" text="Deletar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <graphic>
 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
 <image>

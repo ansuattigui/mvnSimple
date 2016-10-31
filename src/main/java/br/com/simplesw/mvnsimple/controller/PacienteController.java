@@ -3,37 +3,26 @@ package br.com.simplesw.mvnsimple.controller;
 import br.com.simplesw.mvnsimple.enumerated.Cadastro;
 import br.com.simplesw.mvnsimple.enumerated.EstadoCivil;
 import br.com.simplesw.mvnsimple.enumerated.Etnia;
+import br.com.simplesw.mvnsimple.enumerated.Oper;
 import br.com.simplesw.mvnsimple.enumerated.Sexo;
 import br.com.simplesw.mvnsimple.enumerated.Status;
-import br.com.simplesw.mvnsimple.enumerated.Oper;
 import br.com.simplesw.mvnsimple.modelos.Paciente;
-import com.br.ralfh.medico.exceptions.CampoNuloException;
-import com.br.ralfh.medico.modelos.CEPs;
-import com.br.ralfh.medico.modelos.Convenios;
-import com.br.ralfh.medico.modelos.FichaMedica;
-import com.br.ralfh.medico.modelos.HorariosAgenda;
-import com.br.ralfh.medico.modelos.Pacientes;
-import com.br.ralfh.medico.modelos.UF;
-import com.br.ralfh.medico.modelos.UFs;
+import br.com.simplesw.mvnsimple.util.DateUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -41,20 +30,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-import javax.persistence.EntityManager;
-import jfxtras.labs.util.Util;
+import javax.inject.Inject;
 import jidefx.scene.control.field.DateField;
 import jidefx.scene.control.field.FormattedTextField;
-import jidefx.scene.control.field.verifier.IntegerRangePatternVerifier;
 
 /**
  * FXML Controller class
  *
  * @author ralfh
  */
-public class PacienteController implements Serializable {
+public class PacienteController extends FxmlController {
         
     @FXML public Button btnCriar;                @FXML public Button btnAtualizar;
     @FXML public Button btnDeletar;              @FXML public Button btnConfirmar;
@@ -86,72 +71,58 @@ public class PacienteController implements Serializable {
     @FXML public Button btnReceitas;             @FXML public Button btnRecibos;
     @FXML public Button btnProcuraId;            @FXML public Button btnProcuraNome;
     @FXML public Button btnProcuraCep;
-                  
+    
+    private final String FXMLPath = "/view/Pacientes.fxml";
+    private SimpleObjectProperty<Integer> sopidade;
     private Oper oper;       
     private byte[] bFotografia; 
-
+    private Paciente paciente;
+    
+    @Inject
     public PacienteController() {
-        this.oper = Oper.IDLE;
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        this.oper = Oper.IDLE;
+        listenerIdade();
+
         setToolTips();
         habilEdicaoFired();
         initCombos();
-        initFmtCep();
-        addPacienteListener();
-        addPacientesListener();
+//        initFmtCep();
+//        addPacienteListener();
+//        addPacientesListener();
         bindDataNascIdade();
-        addListenerDataNasc();
-        addListenerUF();
+//        addListenerUF();
         setButtons();
     } 
     
     @Override
-    public void setPaciente(Integer pac, Integer horario) {
-        sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithCodAnt(pac)));
-        OrigemExterna = horario;
-    }
-    
-    @Override
-    public void setPaciente(Paciente pac, Integer horario) {
-        paciente = pac;
-        sopPaciente.set(paciente);
-        OrigemExterna = horario;
+    public Scene sceneShow(String FxmlPath) throws IOException {        
+        return super.sceneShow(FXMLPath);
     }
 
-    @Override
-    public void addStageCloseListener() {
-        getController().getStage().setOnHiding(new EventHandler<WindowEvent>() {
-          @Override
-          public void handle(WindowEvent we) {
-              if (OrigemExterna > 0) {
-                HorariosAgenda.atualizaPacienteHorario(paciente, OrigemExterna);
-              }
-          }
-    });     
-    }
-    
-    public void addListenerDataNasc() {
-        nascPaciente.valueProperty().addListener(new ChangeListener() {
+    public void listenerIdade() {
+        nascimento.valueProperty().addListener(new ChangeListener() {
         @Override
         public void changed(ObservableValue o,Object oldVal,Object newVal) {
             if (!Objects.isNull(newVal)) {
-                Integer Idade = Period.between(Util.ld(nascPaciente.valueProperty().get()), LocalDate.now()).getYears();
-                sopIdade.set(Idade);
+                Integer idad = Period.between(DateUtil.ld(nascimento.valueProperty().get()), LocalDate.now()).getYears();
+                sopidade.set(idad);
             } else {
-                sopIdade.set(0);
-            }
-            
+                sopidade.set(0);
+            }            
         }
     });
     }
     
     private void bindDataNascIdade() {
-        idade.textProperty().bind(sopIdade.asString());
+        idade.textProperty().bind(sopidade.asString());
     }                    
-    
+
+/*    
     private void addPacienteListener() { 
         sopPaciente.addListener(new ChangeListener() {
         @Override
@@ -199,41 +170,37 @@ public class PacienteController implements Serializable {
             }
         });        
     }  
+*/
         
     private void initCombos() {
-        initComboUfPaciente();
-        initComboSexoPaciente();
+        initComboStatus();
+        initComboCadastro();
+        initComboSexo();
         initComboEstadoCivil();
         initComboEtnia();
-        initComboConvenio();
-        initComboStatus();
-        initComboSitCadastro();
-        initComboNaturalidade();
-        initComboNacionalidade();
+
+//        initComboUfPaciente();
+//        initComboConvenio();
+//        initComboNaturalidade();
+//        initComboNacionalidade();
     }
 
     private void initComboStatus() {
-        statusPac.getItems().clear();
-        ObservableList<StatusPaciente> options = 
-            FXCollections.observableArrayList(
-                StatusPaciente.values()
-            );        
-        statusPac.getItems().addAll(options);
-        statusPac.getSelectionModel().selectFirst();    //  CRIAR ENTRADAS EM STATUS  datafield em pacientes  mascara dados datafield
+        status.getItems().clear();
+        ObservableList<Status> options = FXCollections.observableArrayList(Status.values());        
+        status.getItems().addAll(options);
+        status.getSelectionModel().selectFirst();    //  CRIAR ENTRADAS EM STATUS  datafield em pacientes  mascara dados datafield
     }
 
-    private void initComboSitCadastro() {
-        sitCadastro.getItems().clear();
-        ObservableList<SitCadastro> options = 
-            FXCollections.observableArrayList(
-                SitCadastro.values()
-            );        
-        sitCadastro.getItems().addAll(options);
+    private void initComboCadastro() {
+        cadastro.getItems().clear();
+        ObservableList<Cadastro> options = FXCollections.observableArrayList(Cadastro.values());        
+        cadastro.getItems().addAll(options);
     }
-    
-    
+
+/*    
     private void initComboUfPaciente() {            
-        ufs = UFs.getObsLista();        
+        uf = UFs.getObsLista();        
         for (UF uf:ufs) {
             ufPaciente.getItems().add(uf.getUf());
         }
@@ -250,37 +217,31 @@ public class PacienteController implements Serializable {
         }
     });
     }
+*/
     
-    private void initComboSexoPaciente() {       
-        ObservableList<Sexo> options = 
-            FXCollections.observableArrayList(
-                Sexo.values()
-            );        
-        sexoPaciente.getItems().addAll(options);        
+    private void initComboSexo() {       
+        sexo.getItems().clear();
+        ObservableList<Sexo> options = FXCollections.observableArrayList(Sexo.values());        
+        sexo.getItems().addAll(options);        
     }
     
     private void initComboEstadoCivil() {
-        ObservableList<EstadoCivil> options = 
-            FXCollections.observableArrayList(
-                EstadoCivil.values()
-            );    
+        estadocivil.getItems().clear();
+        ObservableList<EstadoCivil> options = FXCollections.observableArrayList(EstadoCivil.values());    
         ObservableList<String> lista=FXCollections.observableArrayList();
-        
         for (EstadoCivil item : options) {
             lista.add(item.estadocivil());
-        }
-        
-        estCivilPaciente.getItems().addAll(lista);        
+        }        
+        estadocivil.getItems().addAll(lista);        
     }
                     
     private void initComboEtnia() {
-        ObservableList<Etnia> options = 
-            FXCollections.observableArrayList(
-                Etnia.values()
-            );    
-        etniaPaciente.getItems().addAll(options);  
+        etnia.getItems().clear();
+        ObservableList<Etnia> options = FXCollections.observableArrayList(Etnia.values());    
+        etnia.getItems().addAll(options);  
     }
 
+/*    
     private void initComboNaturalidade() {
         ObservableList<String> options = 
             FXCollections.observableArrayList(UFs.getNaturalidades());    
@@ -307,22 +268,24 @@ public class PacienteController implements Serializable {
         fmtCEP.setPattern("h-g"); 
         fmtCEP.setClearButtonVisible(true);
     }
-    
+*/  
+
     public void criaPacienteFired(ActionEvent event) {
-        status = Oper.INSERTING;
+        oper = Oper.INSERTING;
         apagaPaciente();
-        codAntPaciente.setText(String.valueOf(Pacientes.getProcCodAnt()));
         setButtons();
         habilEdicaoFired();
     }
     
     public void atualizaPacienteFired(ActionEvent event) {
-        status = Oper.UPDATING;
+        oper = Oper.UPDATING;
         setButtons();
         habilEdicaoFired();
     }
+
     
-    public void btnDelPacienteFired(ActionEvent event) {
+    public void delPacienteFired(ActionEvent event) {
+/*        
         if (ExcluiRegistroDlg("EPAC", "", null,this.getStage())) {
             if (!Pacientes.excluiPaciente(paciente)) {
                 ShowDialog("EX", "Não foi possível excluir o paciente", null,this.getStage());
@@ -333,9 +296,11 @@ public class PacienteController implements Serializable {
                 setButtons();
             }
         }
+*/
     }
             
     public void confPacienteFired(ActionEvent event) {          
+/*        
         if (status==Oper.INSERTING) {            
             EntityManager manager = JPAUtil.getEntityManager();
             manager.getTransaction().begin();  
@@ -368,19 +333,16 @@ public class PacienteController implements Serializable {
         
         setButtons();      
         habilEdicaoFired();
+*/
     }
     
     public void cancPacienteFired(ActionEvent event) {
-        try {
-            if (status==Oper.INSERTING) {
-                status = Oper.IDLE;
-                apagaPaciente();
-            } else {
-                status = Oper.SHOWING;
-                mostraPaciente();
-            }        
-        } catch (NullPointerException e) {
-            status = Oper.IDLE;
+        if (oper==Oper.INSERTING) {
+            oper = Oper.IDLE;
+            apagaPaciente();
+        } else {
+            oper = Oper.SHOWING;
+            mostraPaciente();
         }        
         setButtons();      
         habilEdicaoFired();
@@ -388,6 +350,7 @@ public class PacienteController implements Serializable {
     
     @FXML
     public void fichaMedicaFired(ActionEvent event){
+/*                
         String fxmlGUI = "fxml/FichaMedica.fxml";
         String titleGUI = "Ficha médica de " + paciente.getNome() + " / " + paciente.getConvenio().getNome();
         StageStyle fxmlStyle = StageStyle.DECORATED;
@@ -401,9 +364,12 @@ public class PacienteController implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(PacienteController.class.getName()).log(Level.SEVERE, null, ex);
         }      
+*/
     }
+    
     @FXML
     public void btnAtestadosFired(ActionEvent event){
+/*        
         String fxmlGUI = "fxml/Atestado.fxml";
         String titleGUI = "Atestados de " + paciente.getNome() + " / " + paciente.getConvenio().getNome();
         StageStyle fxmlStyle = StageStyle.DECORATED;
@@ -416,10 +382,12 @@ public class PacienteController implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(PacienteController.class.getName()).log(Level.SEVERE, null, ex);
         }      
+*/
     }
     
     @FXML
     public void btnReceitasFired(ActionEvent event){
+/*        
         String fxmlGUI = "fxml/Receita.fxml";
         String titleGUI = "Receitas de " + paciente.getNome() + " / " + paciente.getConvenio().getNome();
         StageStyle fxmlStyle = StageStyle.DECORATED;
@@ -432,10 +400,12 @@ public class PacienteController implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(PacienteController.class.getName()).log(Level.SEVERE, null, ex);
         }      
+*/
     }
 
     @FXML
     public void btnRecibosFired(ActionEvent event){
+/*        
         String fxmlGUI = "fxml/Recibo.fxml";
         String titleGUI = "Recibos de " + paciente.getNome() + " / " + paciente.getConvenio().getNome();
         StageStyle fxmlStyle = StageStyle.DECORATED;
@@ -448,22 +418,25 @@ public class PacienteController implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(PacienteController.class.getName()).log(Level.SEVERE, null, ex);
         }      
+*/
     }
 
     
     public void btnProcurarFired(ActionEvent event) {
         apagaPaciente();
-        status = Oper.IDLE;
+        oper = Oper.IDLE;
         setButtons();
         habilEdicaoFired();
     }
     
 
     public void sairFired(ActionEvent event) {
-        this.stage.close();
+//        this.stage.close();
     }    
     
     public void btnFotografarFired(ActionEvent event) throws Exception {
+/*        
+        
         CameraController controller;
         GUIFactory camera;
                 
@@ -484,41 +457,43 @@ public class PacienteController implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(CameraController.class.getName()).log(Level.SEVERE, null, ex);
         }        
+*/
     }   
     
     private void mostraPaciente() {
         try {
-            codAntPaciente.setText(String.valueOf(paciente.getCodAntigo()));
-            nomePaciente.setText(paciente.getNome()); 
-            sexoPaciente.getSelectionModel().clearSelection();
-            sexoPaciente.getSelectionModel().select(paciente.getSexo());
-            nascPaciente.setValue(paciente.getNascimento());
-            naturPaciente.getEditor().setText(paciente.getNaturalidade());
-            nacionPaciente.getSelectionModel().select(paciente.getNacionalidade());
-            estCivilPaciente.getSelectionModel().select(paciente.getEstadoCivil());
-            etniaPaciente.getSelectionModel().select(paciente.getEtnia());
-            profPaciente.setText(paciente.getProfissao());
-            rgPaciente.setText(paciente.getIdentidade());
-            cpfPaciente.setText(paciente.getCpf());
-            enderPaciente.setText(paciente.getEndereco());
-            numEndPaciente.setText(paciente.getNumero());
-            compEndPaciente.setText(paciente.getComplemento());
-            bairroPaciente.setText(paciente.getBairro());
-            fmtCEP.setText(paciente.getCep());
-            cidadePaciente.setText(paciente.getCidade());
-            ufPaciente.getSelectionModel().select(paciente.getEstado());
-            telResPaciente.setText(paciente.getTelResidencial());
-            telComPaciente.setText(paciente.getTelComercial());
-            celularPaciente.setText(paciente.getCelular());
-            emailPaciente.setText(paciente.getEmail());
-            String conv = paciente.getConvenio().getNome();
-            convPaciente.getSelectionModel().select(conv);
-            matConvPaciente.setText(paciente.getNumConveniado());
+            id.setText(String.valueOf(paciente.getId()));
+            nome.setText(paciente.getNome()); 
+            sexo.setValue(Sexo.valueOf(paciente.getSexo()));                        
+            nascimento.setValue(paciente.getNascimento());
+//            naturPaciente.getEditor().setText(paciente.getNaturalidade());
+//            nacionPaciente.getSelectionModel().select(paciente.getNacionalidade());
+            estadocivil.setValue(paciente.getEstadocivil());
+            etnia.setValue(Etnia.valueOf(paciente.getEtnia()));
+            profissao.setText(paciente.getProfissao());
+            rg.setText(paciente.getRg());
+            cpf.setText(paciente.getCpf());
+            endereco.setText(paciente.getEndereco());
+            numero.setText(paciente.getNumero());
+            complemento.setText(paciente.getComplemento());
+            bairro.setText(paciente.getBairro());
+            cep.setText(paciente.getCep());
+            cidade.setText(paciente.getCidade());
+            uf.getSelectionModel().select(paciente.getUf());
+            telresidencial.setText(paciente.getTelresidencial());
+            telcomercial.setText(paciente.getTelcomercial());
+            telcelular.setText(paciente.getTelcelular());
+            email.setText(paciente.getEmail());
+            
+//            String conv = paciente.getConvenio().getNome();
+//            convPaciente.getSelectionModel().select(conv);
+//            matConvPaciente.setText(paciente.getNumConveniado());
             
             indicacao.setText(paciente.getIndicacao());
             //sitCadastro.getSelectionModel().select(SitCadastro.valueOf(paciente.get));
-            statusPac.getSelectionModel().select(StatusPaciente.valueOf(paciente.getStatus()));
-            dataPrimConsulta.setText(FichaMedica.getDataPrimCons(paciente));
+            status.setValue(Status.valueOf(paciente.getStatus()));
+            //dataPrimConsulta.setText(FichaMedica.getDataPrimCons(paciente));
+            
             bFotografia = paciente.getFotografia();
             try {
                 ByteArrayInputStream in = new ByteArrayInputStream(bFotografia);
@@ -535,43 +510,38 @@ public class PacienteController implements Serializable {
 
     private Boolean preenchePaciente() {        
         Boolean resultado = Boolean.FALSE;
-        try {
-            paciente.setCodAntigo(Integer.parseInt(codAntPaciente.getText()));        
-            paciente.setNome(nomePaciente.getText()); 
-            paciente.setSexo(sexoPaciente.getSelectionModel().getSelectedItem());
-            paciente.setNascimento(nascPaciente.getValue());
-            paciente.setEtnia(etniaPaciente.getSelectionModel().getSelectedItem());
-            paciente.setConvenio((String) convPaciente.getSelectionModel().getSelectedItem());
-            paciente.setNumConveniado(matConvPaciente.getText());
+//        try {
+            paciente.setNome(nome.getText()); 
+            paciente.setSexo(sexo.getValue().toString());
+            paciente.setNascimento(nascimento.getValue());
+            paciente.setEtnia(etnia.getValue().toString());
+//            paciente.setConvenio((String) convPaciente.getSelectionModel().getSelectedItem());
+//            paciente.setNumConveniado(matConvPaciente.getText());
             resultado = Boolean.TRUE;
 //        } catch(CampoNuloException | CampoEmBrancoException cne) {
-        } catch(CampoNuloException cne) {
-            ShowDialog("EX", cne.getMessage(), null,this.getStage());
-        }
-        paciente.setNaturalidade(naturPaciente.getEditor().getText());
-        paciente.setNacionalidade(nacionPaciente.getEditor().getText());
-        paciente.setEstadoCivil(estCivilPaciente.getSelectionModel().getSelectedItem());
-        paciente.setProfissao(profPaciente.getText());
-        paciente.setIdentidade(rgPaciente.getText());
-        paciente.setCpf(cpfPaciente.getText());
-        paciente.setEndereco(enderPaciente.getText());
-        paciente.setNumero(numEndPaciente.getText());
-        paciente.setComplemento(compEndPaciente.getText());
-        paciente.setBairro(bairroPaciente.getText());
-        paciente.setCep(fmtCEP.getText());
-        paciente.setCidade(cidadePaciente.getText());
-        paciente.setEstado((String) ufPaciente.getSelectionModel().getSelectedItem());
-        paciente.setTelComercial(telComPaciente.getText());
-        paciente.setTelResidencial(telResPaciente.getText());
-        paciente.setCelular(celularPaciente.getText());
-        paciente.setEmail(emailPaciente.getText()); 
+//        } catch(CampoNuloException cne) {
+//            ShowDialog("EX", cne.getMessage(), null,this.getStage());
+//        }
+        paciente.setNaturalidade(naturalidade.getEditor().getText());
+        paciente.setNacionalidade(nacionalidade.getEditor().getText());
+        paciente.setEstadocivil(estadocivil.getValue());
+        paciente.setProfissao(profissao.getText());
+        paciente.setRg(rg.getText());
+        paciente.setCpf(cpf.getText());
+        paciente.setEndereco(endereco.getText());
+        paciente.setNumero(numero.getText());
+        paciente.setComplemento(complemento.getText());
+        paciente.setBairro(bairro.getText());
+        paciente.setCep(cep.getText());
+        paciente.setCidade(cidade.getText());
+        paciente.setUf((String) uf.getValue());
+        paciente.setTelcomercial(telcomercial.getText());
+        paciente.setTelresidencial(telresidencial.getText());
+        paciente.setTelcelular(telcelular.getText());
+        paciente.setEmail(email.getText()); 
         
         paciente.setIndicacao(indicacao.getText());
-        if (statusPac.getValue()!=null) {
-            paciente.setStatus(statusPac.getValue().toString());
-        } else {
-            paciente.setStatus(statusPac.getItems().get(0).name());
-        }
+        paciente.setStatus(status.getValue().toString());
 //        paciente.setSitCadastro(sitCadastro.getValue().toString());
         
         paciente.setFotografia(bFotografia);             
@@ -580,142 +550,147 @@ public class PacienteController implements Serializable {
         
     public void btnProcCodFired(ActionEvent event) throws Exception {
 //        Pacientes pacientes = new Pacientes();
-        sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithCod(Integer.parseInt(codPaciente.getText()))));
+//        sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithCod(Integer.parseInt(codPaciente.getText()))));
     }    
     
     public void btnProcCodAntFired(ActionEvent event) throws Exception {
 //        Pacientes pacientes = new Pacientes();
-        Integer codant = (codAntPaciente.getText().trim().isEmpty()?-1:Integer.parseInt(codAntPaciente.getText()));
+/*        Integer codant = (codAntPaciente.getText().trim().isEmpty()?-1:Integer.parseInt(codAntPaciente.getText()));
         if (codant>0) {
             sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithCodAnt(codant)));
         }
+*/
     }
     
     public void btnProcNomeFired(ActionEvent event) throws Exception {
-        String nome = nomePaciente.getText();
-        if (!nome.isEmpty()) {
-            nome = "%" + nome.replace(" ", "%");            
-            sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithNome(nome)));
+        String pac = nome.getText();
+        if (!pac.isEmpty()) {
+            pac = "%" + pac.replace(" ", "%");            
+//            sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithNome(nome)));
         }
     } 
     
     public void btnProcCepFired(ActionEvent event) {      
-        if (!fmtCEP.getText().isEmpty()) {
+/*        if (!fmtCEP.getText().isEmpty()) {
             uf = UFs.getUFPeloCep(fmtCEP.getText());
             if (uf != null) {
                 preencheCep(uf);
             }
         }
+*/
     }
-    
+/*    
     private void preencheCep(UF uf) {
         ufPaciente.getSelectionModel().select(uf.getUf());
         cep = CEPs.getCEPPeloNome(fmtCEP.getText(), uf.getUf());
         if (cep!=null) preencheEndereco();
     }
+*/
     
     private void preencheEndereco() {
+/*        
         if (cep!=null) {
             enderPaciente.setText(cep.getTp_logradouro()+" "+cep.getLogradouro());
             bairroPaciente.setText(cep.getBairro());
             cidadePaciente.setText(cep.getCidade());
         }
+*/
     }
     
     
     public void apagaPaciente() {
-        this.codAntPaciente.clear();
-        this.nomePaciente.clear();
-        this.sexoPaciente.getSelectionModel().select(-1);
-        this.etniaPaciente.getSelectionModel().select(-1);
-        this.nascPaciente.setValue(null);
+        this.id.clear();
+        this.nome.clear();
+        this.sexo.getSelectionModel().select(-1);
+        this.etnia.getSelectionModel().select(-1);
+        this.nascimento.setValue(null);
         this.idade.clear();
-        this.naturPaciente.getEditor().clear();
-        this.nacionPaciente.getEditor().clear();
-        this.estCivilPaciente.getSelectionModel().select(-1);
-        this.profPaciente.clear();
-        this.rgPaciente.clear();
-        this.cpfPaciente.clear();
-        this.enderPaciente.clear();
-        this.numEndPaciente.clear();
-        this.compEndPaciente.clear();
-        this.bairroPaciente.clear();
-        this.cidadePaciente.clear();
-        this.fmtCEP.clear();
-        this.ufPaciente.getSelectionModel().select(-1);
-        this.telComPaciente.clear();
-        this.telResPaciente.clear();
-        this.celularPaciente.clear();
-        this.emailPaciente.clear();
-        this.convPaciente.getSelectionModel().select(-1);
-        this.matConvPaciente.clear();  
+        this.naturalidade.getEditor().clear();
+        this.nacionalidade.getEditor().clear();
+        this.estadocivil.getSelectionModel().select(-1);
+        this.profissao.clear();
+        this.rg.clear();
+        this.cpf.clear();
+        this.endereco.clear();
+        this.numero.clear();
+        this.complemento.clear();
+        this.bairro.clear();
+        this.cidade.clear();
+        this.cep.clear();
+        this.uf.getSelectionModel().select(-1);
+        this.telcomercial.clear();
+        this.telresidencial.clear();
+        this.telcelular.clear();
+        this.email.clear();
+        this.convenio.getSelectionModel().select(-1);
+        this.matricula.clear();  
         this.indicacao.clear();
-        this.dataPrimConsulta.clear();
-        this.statusPac.getSelectionModel().select(-1);
-        this.sitCadastro.getSelectionModel().select(-1);
+//        this.dataPrimConsulta.clear();
+        this.status.getSelectionModel().select(-1);
+        this.cadastro.getSelectionModel().select(-1);
         this.imageFotografia.setImage(null);
     }
     
     public void habilEdicaoFired() {
-        this.codAntPaciente.setEditable(((status==Oper.INSERTING)|(status==Oper.UPDATING))|(status==Oper.IDLE));  //setEditable(Boolean.FALSE);   //(((status==Oper.INSERTING)|(status==Oper.UPDATING))|(status==Oper.IDLE));
-        this.nomePaciente.setEditable(((status==Oper.INSERTING)|(status==Oper.UPDATING))|(status==Oper.IDLE));
-//        this.sexoPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-//        this.nascPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-//        this.nascPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-//        this.naturPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-//        this.nacionPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-//        this.estCivilPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-        this.profPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.rgPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.cpfPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.enderPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.numEndPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.compEndPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.bairroPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.cidadePaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-//        this.fmtCEP.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-//        this.ufPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-        this.telComPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.telResPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.celularPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        this.emailPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-//        this.convPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-        this.matConvPaciente.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));              
-        this.indicacao.setEditable((status==Oper.INSERTING)|(status==Oper.UPDATING));              
+        this.id.setEditable(((oper==Oper.INSERTING)|(oper==Oper.UPDATING))|(oper==Oper.IDLE));  
+        this.nome.setEditable(((oper==Oper.INSERTING)|(oper==Oper.UPDATING))|(oper==Oper.IDLE));
+//        this.sexoPaciente.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+//        this.nascPaciente.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+//        this.nascPaciente.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+//        this.naturPaciente.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+//        this.nacionPaciente.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+//        this.estCivilPaciente.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+        this.profissao.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.rg.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.cpf.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.endereco.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.numero.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.complemento.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.bairro.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.cidade.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+//        this.fmtCEP.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+//        this.ufPaciente.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+        this.telcomercial.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.telresidencial.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.telcelular.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.email.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        this.convenio.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+        this.matricula.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));              
+        this.indicacao.setEditable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));              
         
     }
     
     private void setButtons() {
-        btnCriarPaciente.setDisable((status==Oper.INSERTING)|(status==Oper.UPDATING));
-        btnAtualPaciente.setDisable((status==Oper.INSERTING)|(status==Oper.UPDATING)|(status!=Oper.SHOWING));
-        btnDelPaciente.setDisable(status!=Oper.SHOWING);
-        btnConfPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
-        btnCancPaciente.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
+        btnCriar.setDisable((oper==Oper.INSERTING)|(oper==Oper.UPDATING));
+        btnAtualizar.setDisable((oper==Oper.INSERTING)|(oper==Oper.UPDATING)|(oper!=Oper.SHOWING));
+        btnDeletar.setDisable(oper!=Oper.SHOWING);
+        btnConfirmar.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
+        btnCancelar.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
         
-        btnFichaMedica.setDisable((status!=Oper.SHOWING) | (!perfilUsuario.getTipoUsuario().equals("Medico"))) ;
-        btnAtestados.setDisable((status!=Oper.SHOWING) | (!perfilUsuario.getTipoUsuario().equals("Medico")));
-        btnReceitas.setDisable((status!=Oper.SHOWING) | (!perfilUsuario.getTipoUsuario().equals("Medico")));
-        btnRecibos.setDisable((status!=Oper.SHOWING));        
+//        btnFichaMedica.setDisable((oper!=Oper.SHOWING) | (!perfilUsuario.getTipoUsuario().equals("Medico"))) ;
+//        btnAtestados.setDisable((oper!=Oper.SHOWING) | (!perfilUsuario.getTipoUsuario().equals("Medico")));
+//        btnReceitas.setDisable((oper!=Oper.SHOWING) | (!perfilUsuario.getTipoUsuario().equals("Medico")));
+//        btnRecibos.setDisable((oper!=Oper.SHOWING));        
         
-        btnProcurar.setDisable(status!=Oper.SHOWING);
-        btnProcCodAnt.setDisable(status!=Oper.IDLE);
-        btnProcNome.setDisable(status!=Oper.IDLE);
-        btnSair.setDisable((status!=Oper.IDLE)&(status!=Oper.SHOWING));
-        btnFotografar.setDisable((status!=Oper.INSERTING)&(status!=Oper.UPDATING));
+        btnProcurar.setDisable(oper!=Oper.SHOWING);
+        btnProcuraId.setDisable(oper!=Oper.IDLE);
+        btnProcuraNome.setDisable(oper!=Oper.IDLE);
+        btnSair.setDisable((oper!=Oper.IDLE)&(oper!=Oper.SHOWING));
+        btnFotografar.setDisable((oper!=Oper.INSERTING)&(oper!=Oper.UPDATING));
     }
     
     private void setToolTips() {
-        btnCriarPaciente.setTooltip(new Tooltip("Criar novo Paciente"));
-        btnAtualPaciente.setTooltip(new Tooltip("Atualizar o Paciente selecionado"));        
-        btnConfPaciente.setTooltip(new Tooltip("Gravar Paciente"));
-        btnDelPaciente.setTooltip(new Tooltip("Excluir Paciente selecionado"));
-        btnCancPaciente.setTooltip(new Tooltip("Cancelar as alterações"));        
+        btnCriar.setTooltip(new Tooltip("Criar Paciente"));
+        btnAtualizar.setTooltip(new Tooltip("Atualizar o Paciente selecionado"));        
+        btnConfirmar.setTooltip(new Tooltip("Gravar Paciente"));
+        btnDeletar.setTooltip(new Tooltip("Excluir Paciente selecionado"));
+        btnCancelar.setTooltip(new Tooltip("Cancelar as alterações"));        
         btnFichaMedica.setTooltip(new Tooltip("Abrir a Ficha Médica do Paciente"));
         btnReceitas.setTooltip(new Tooltip("Emitir/Acesssar Receitas do Paciente"));
         btnRecibos.setTooltip(new Tooltip("Emitir/Acesssar Recibos do Paciente"));
         btnAtestados.setTooltip(new Tooltip("Emitir/Acesssar Atestados do Paciente"));
-        btnProcCodAnt.setTooltip(new Tooltip("Procurar Paciente pelo codigo"));
-        btnProcNome.setTooltip(new Tooltip("Procurar Paciente pelo nome"));
+        btnProcuraId.setTooltip(new Tooltip("Procurar Paciente pelo codigo"));
+        btnProcuraNome.setTooltip(new Tooltip("Procurar Paciente pelo nome"));
         btnRecibos.setTooltip(new Tooltip("Emitir/Acesssar Recibos do Paciente"));
         btnSair.setTooltip(new Tooltip("Fechar esta janela"));
     }

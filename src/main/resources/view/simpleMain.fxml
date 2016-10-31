@@ -21,7 +21,7 @@
       <panes>
       <TitledPane fx:id="tpaneAgenda" alignment="CENTER_RIGHT" contentDisplay="CENTER" expanded="false" text="Agenda" textAlignment="RIGHT">
       <content>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="CENTER" prefHeight="200.0">
       <children>
             <Button fx:id="btnAgenda" alignment="CENTER" contentDisplay="TEXT_ONLY" mnemonicParsing="false" onAction="#btnAgendaFired" prefHeight="30.0" prefWidth="120.0" styleClass="botaomd" text="Agenda" GridPane.columnIndex="0" GridPane.rowIndex="2" />
       </children>
@@ -82,6 +82,13 @@
       <font>
       <Font name="Tahoma" size="14.0" />
       </font>
+                     <content>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Button fx:id="btnPacientes" alignment="CENTER" contentDisplay="TEXT_ONLY" mnemonicParsing="false" onAction="#btnPacientesFired" prefHeight="30.0" prefWidth="120.0" styleClass="botaomd" text="Pacientes" />
+                           </children>
+                        </VBox>
+                     </content>
       </TitledPane>
       </panes>
       <padding>
