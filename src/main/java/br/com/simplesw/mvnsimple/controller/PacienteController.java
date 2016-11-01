@@ -22,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -86,6 +87,7 @@ public class PacienteController extends FxmlController {
     public void initialize(URL url, ResourceBundle rb) {
         
         this.oper = Oper.IDLE;
+        sopidade = new SimpleObjectProperty<>();
         listenerIdade();
 
         setToolTips();
@@ -100,7 +102,7 @@ public class PacienteController extends FxmlController {
     } 
     
     @Override
-    public Scene sceneShow(String FxmlPath) throws IOException {        
+    public Scene sceneShow(String FxmlPath) throws IOException {         
         return super.sceneShow(FXMLPath);
     }
 
@@ -430,10 +432,6 @@ public class PacienteController extends FxmlController {
     }
     
 
-    public void sairFired(ActionEvent event) {
-//        this.stage.close();
-    }    
-    
     public void btnFotografarFired(ActionEvent event) throws Exception {
 /*        
         

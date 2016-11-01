@@ -54,11 +54,11 @@
                      </graphic>
                   </Button>
                   <Separator opacity="0.0" prefWidth="680.0" />
-                  <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="98.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="Agendar">
+                  <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="98.0" layoutY="10.0" mnemonicParsing="false" onAction="#sairFired" prefHeight="40.0" prefWidth="40.0" text="Agendar">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../img/agendar.png" />
+                              <Image url="@../img/Door-Out.png" />
                            </image>
                         </ImageView>
                      </graphic>
