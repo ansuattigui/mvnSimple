@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  */
 public class SimpleFxLauncher extends Application {
     
-    //private Weld weld;
+    private Stage stage;
     
     /**
      * @param args the command line arguments
@@ -27,17 +27,9 @@ public class SimpleFxLauncher extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
-        //this.weld = new Weld();
-        //WeldContainer weldContainer = weld.initialize();
-        
+        this.stage = primaryStage;
         CdiContext context = CdiContext.INSTANCE;
-
-        //Get an isntance of the bean from the context
         SimpleMainController controller = context.getBean(SimpleMainController.class);
-        
-//        SimpleMainController controller = weldContainer.instance().select(SimpleMainController.class).get();
-        
         primaryStage.setTitle("Simple");
         primaryStage.setScene(controller.sceneShow(null));
         primaryStage.show();
@@ -48,5 +40,12 @@ public class SimpleFxLauncher extends Application {
      //   weld.shutdown();
         super.stop();
     }    
+
+    /**
+     * @return the stage
+     */
+    public Stage getStage() {
+        return stage;
+    }
     
 }
