@@ -123,11 +123,11 @@
                                           <HBox spacing="2.0">
 <children>
 <TextField fx:id="id" alignment="CENTER" maxWidth="70.0" />
-                                                <Button fx:id="btnProcuraId" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcCodAntFired" styleClass="botaopq" text="Button" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+                                                <Button fx:id="btnProcuraId" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcIdFired" styleClass="botaopq" text="Button" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <graphic>
 <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
 <image>
-<Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/find.png" />
+<Image url="@../img/find.png" />
 </image>
 </ImageView>
 </graphic>
@@ -145,9 +145,9 @@
                                                 <Button fx:id="btnProcuraNome" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcNomeFired" styleClass="botaopq" text="Button" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <graphic>
 <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-<image>
-<Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/find.png" />
-</image>
+                                                         <image>
+                                                            <Image url="@../img/find.png" />
+                                                         </image>
 </ImageView>
 </graphic>
 </Button>
@@ -267,9 +267,9 @@
 <Button fx:id="btnFotografar" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" layoutX="109.0" layoutY="323.0" mnemonicParsing="false" onAction="#btnFotografarFired" styleClass="botaopq" text="Fotografar">
 <graphic>
 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-<image>
-<Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/Webcam.png" />
-</image>
+                                       <image>
+                                          <Image url="@../img/Webcam.png" />
+                                       </image>
 </ImageView>
 </graphic>
 </Button>
@@ -339,7 +339,7 @@
                                                                      <graphic>
                                                                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
-                                                                              <Image url="@../../../../../JMedico/src/com/br/ralfh/medico/imagens/find.png" />
+                                                                              <Image url="@../img/find.png" />
                                                                            </image>
                                                                         </ImageView>
                                                                      </graphic>

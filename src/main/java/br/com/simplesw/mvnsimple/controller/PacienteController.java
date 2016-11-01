@@ -1,5 +1,6 @@
 package br.com.simplesw.mvnsimple.controller;
 
+import br.com.simplesw.mvnsimple.dao.PacienteDao;
 import br.com.simplesw.mvnsimple.enumerated.Cadastro;
 import br.com.simplesw.mvnsimple.enumerated.EstadoCivil;
 import br.com.simplesw.mvnsimple.enumerated.Etnia;
@@ -22,7 +23,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -78,6 +78,10 @@ public class PacienteController extends FxmlController {
     private Oper oper;       
     private byte[] bFotografia; 
     private Paciente paciente;
+    private SimpleObjectProperty<Paciente> sopPaciente;
+    
+    @Inject 
+    private PacienteDao dao;
     
     @Inject
     public PacienteController() {
@@ -88,13 +92,14 @@ public class PacienteController extends FxmlController {
         
         this.oper = Oper.IDLE;
         sopidade = new SimpleObjectProperty<>();
+        sopPaciente = new SimpleObjectProperty<>();
         listenerIdade();
 
         setToolTips();
         habilEdicaoFired();
         initCombos();
 //        initFmtCep();
-//        addPacienteListener();
+        addPacienteListener();
 //        addPacientesListener();
         bindDataNascIdade();
 //        addListenerUF();
@@ -108,41 +113,35 @@ public class PacienteController extends FxmlController {
 
     public void listenerIdade() {
         nascimento.valueProperty().addListener(new ChangeListener() {
-        @Override
-        public void changed(ObservableValue o,Object oldVal,Object newVal) {
-            if (!Objects.isNull(newVal)) {
-                Integer idad = Period.between(DateUtil.ld(nascimento.valueProperty().get()), LocalDate.now()).getYears();
-                sopidade.set(idad);
-            } else {
-                sopidade.set(0);
-            }            
-        }
-    });
+            @Override
+            public void changed(ObservableValue o,Object oldVal,Object newVal) {
+                if (!Objects.isNull(newVal)) {
+                    Integer idad = Period.between(DateUtil.ld(nascimento.valueProperty().get()), LocalDate.now()).getYears();
+                    sopidade.set(idad);
+                } else {
+                    sopidade.set(0);
+                }            
+            }
+        });
     }
     
     private void bindDataNascIdade() {
         idade.textProperty().bind(sopidade.asString());
     }                    
 
-/*    
+    
     private void addPacienteListener() { 
         sopPaciente.addListener(new ChangeListener() {
-        @Override
-        public void changed(ObservableValue o,Object oldVal,Object newVal) {
-            if (sopPaciente.get() != null) {
-                if (sopPaciente.get().getId() == -1) {
-                    status = Oper.INSERTING;
-                } else {
-                    status = Oper.SHOWING;
-                }
+            @Override
+            public void changed(ObservableValue o,Object oldVal,Object newVal) {
                 setButtons();
                 habilEdicaoFired();
                 mostraPaciente();
             }
-        }
-    });                
+        });                
     }
-        
+    
+/*        
     private void addPacientesListener() { 
         sopPacientes.addListener(new ListChangeListener() {
             @Override
@@ -546,12 +545,13 @@ public class PacienteController extends FxmlController {
         return resultado;
     }
         
-    public void btnProcCodFired(ActionEvent event) throws Exception {
-//        Pacientes pacientes = new Pacientes();
-//        sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithCod(Integer.parseInt(codPaciente.getText()))));
+    public void btnProcIdFired(ActionEvent event) throws Exception {
+        sopPaciente.set(dao.getPacienteWithId(Integer.parseInt(id.getText())));
     }    
     
     public void btnProcCodAntFired(ActionEvent event) throws Exception {
+        
+        
 //        Pacientes pacientes = new Pacientes();
 /*        Integer codant = (codAntPaciente.getText().trim().isEmpty()?-1:Integer.parseInt(codAntPaciente.getText()));
         if (codant>0) {
