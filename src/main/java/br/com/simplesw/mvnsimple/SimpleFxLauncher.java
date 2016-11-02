@@ -9,6 +9,7 @@ import br.com.simplesw.mvnsimple.controller.SimpleMainController;
 import br.com.simplesw.mvnsimple.util.CdiContext;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.jboss.weld.environment.se.events.ContainerInitialized;
 
 /**
  *
@@ -29,6 +30,7 @@ public class SimpleFxLauncher extends Application {
     public void start(Stage primaryStage) throws Exception {
         this.stage = primaryStage;
         CdiContext context = CdiContext.INSTANCE;
+        
         SimpleMainController controller = context.getBean(SimpleMainController.class);
         primaryStage.setTitle("Simple");
         primaryStage.setScene(controller.sceneShow(null));

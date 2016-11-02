@@ -4,12 +4,15 @@
  */
 package br.com.simplesw.mvnsimple.producers;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Disposes;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.jboss.weld.environment.se.events.ContainerInitialized;
 
 /**
  *
@@ -18,19 +21,29 @@ import javax.persistence.Persistence;
 
 public class EntityManagerProducer {
 
-    @Inject 
-    Instance<Object> instance;
+    private EntityManagerFactory emf;
+    
+    private static final ThreadLocal<EntityManager> ENTITY_MANAGER_STORE = new ThreadLocal<>();
         
-    public EntityManagerProducer() {
+    public void init(@Observes ContainerInitialized containerInitialized) {
+        emf = Persistence.createEntityManagerFactory("br.com.simplesw_mvnSimple");
     }
     
     @Produces   
-    public EntityManager createEntityManager() {
-       return Persistence.createEntityManagerFactory("br.com.simplesw_mvnSimple").createEntityManager();
+    public EntityManager getEntityManager() {
+        EntityManager em = ENTITY_MANAGER_STORE.get();
+        if (em == null) {
+            em = emf.createEntityManager();
+            ENTITY_MANAGER_STORE.set(em);
+        }
+        return em;    
     }
 
-    public void closeEM(@Disposes EntityManager manager) {
-       manager.close();
+    public void closeEntityManager(@Disposes EntityManager entityManager) {
+        ENTITY_MANAGER_STORE.remove();
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
     }
     
 }

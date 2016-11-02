@@ -68,8 +68,7 @@ public class PacienteDao {
         return pacientes;                
     }
 
-    public Paciente getPacienteWithId(Integer id) {
-        
+    public Paciente getPacienteWithId(Integer id) {        
         Paciente paciente = manager.find(Paciente.class, id);        
         return paciente;
     }        
