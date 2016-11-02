@@ -83,9 +83,11 @@ public class PacienteController extends FxmlController {
     @Inject 
     private PacienteDao dao;
     
+/*    
     @Inject
     public PacienteController() {
     }
+*/
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
