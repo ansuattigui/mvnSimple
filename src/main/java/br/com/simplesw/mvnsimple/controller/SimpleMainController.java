@@ -5,14 +5,12 @@
  */
 package br.com.simplesw.mvnsimple.controller;
 
-import br.com.simplesw.mvnsimple.SimpleFxLauncher;
+import br.com.simplesw.mvnsimple.ApplicationContainer;
 import br.com.simplesw.mvnsimple.util.CdiContext;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
@@ -34,23 +32,30 @@ public class SimpleMainController extends FxmlController {
     @FXML public Button btnAgenda;
     
     public Stage primaryStage;
+        
     
+/*    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        CdiContext context = CdiContext.INSTANCE;
-        SimpleFxLauncher launcher = context.getBean(SimpleFxLauncher.class);                
-        primaryStage = launcher.getStage();
+        //CdiContext context = CdiContext.INSTANCE;
+//        SimpleFxLauncher launcher = context.getBean(SimpleFxLauncher.class);                
+//        primaryStage = launcher.getStage();
     }
+*/
     
-    @Override
-    public Scene sceneShow(String FxmlPath) throws IOException {        
-        return super.sceneShow(FXMLPath);
-    }
-    
+    public void start(Stage stage, Application.Parameters parameters) throws Exception {
+        
+        stage.setTitle("Simple");
+        stage.setScene(this.sceneShow(FXMLPath));
+        stage.show();        
+        
+    }    
+       
     @FXML
     public void btnAgendaFired(ActionEvent event) throws IOException {        
-        CdiContext context = CdiContext.INSTANCE;
-        AgendaController controller = context.getBean(AgendaController.class);                
+
+        ApplicationContainer appContainer = ApplicationContainer.getInstance();        
+        AgendaController controller = appContainer.getBean(AgendaController.class);                
         Stage stage = new Stage();
         stage.setTitle("Simple");
         stage.setScene(controller.sceneShow(null));

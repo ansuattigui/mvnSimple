@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javax.inject.Inject;
 
 /**
  *
@@ -21,13 +22,11 @@ import javafx.scene.Scene;
  */
 public class FxmlController implements Initializable {
     
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        
-    }
+    @Inject
+    FXMLLoader loader;
     
     public Scene sceneShow(String FxmlPath) throws IOException {
-        Parent root = (Parent)FXMLLoader.load(getClass().getResource(FxmlPath));        
+        Parent root = loader.load(getClass().getResource(FxmlPath));        
         Scene scene = new Scene(root);           
         return scene;
     }
@@ -35,6 +34,11 @@ public class FxmlController implements Initializable {
     public void sairFired(ActionEvent event) {
         ((Node)(event.getSource())).getScene().getWindow().hide();
     }    
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        
+    }
     
     
     

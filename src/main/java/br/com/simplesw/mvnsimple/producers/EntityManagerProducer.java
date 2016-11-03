@@ -4,13 +4,12 @@
  */
 package br.com.simplesw.mvnsimple.producers;
 
-import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.jboss.weld.environment.se.events.ContainerInitialized;
 
 /**
  *
@@ -19,13 +18,20 @@ import org.jboss.weld.environment.se.events.ContainerInitialized;
 
 public class EntityManagerProducer {
 
-    private EntityManagerFactory emf;
+    private final EntityManagerFactory emf;
     
     private static final ThreadLocal<EntityManager> ENTITY_MANAGER_STORE = new ThreadLocal<>();
         
+    @Inject
+    public EntityManagerProducer() {
+        emf = Persistence.createEntityManagerFactory("br.com.simplesw_mvnSimple");
+    }
+    
+/*    
     public void init(@Observes ContainerInitialized containerInitialized) {
         emf = Persistence.createEntityManagerFactory("br.com.simplesw_mvnSimple");
     }
+*/
     
     @Produces   
     public EntityManager getEntityManager() {

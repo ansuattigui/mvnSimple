@@ -6,7 +6,6 @@
 package br.com.simplesw.mvnsimple;
 
 import br.com.simplesw.mvnsimple.controller.SimpleMainController;
-import br.com.simplesw.mvnsimple.util.CdiContext;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -22,20 +21,17 @@ public class SimpleFxLauncher extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SimpleFxLauncher.launch(args);
+        Application.launch(args);
     }    
     
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {        
         this.stage = primaryStage;
-        CdiContext context = CdiContext.INSTANCE;
-        
-        SimpleMainController controller = context.getBean(SimpleMainController.class);
-        primaryStage.setTitle("Simple");
-        primaryStage.setScene(controller.sceneShow(null));
-        primaryStage.show();
+        ApplicationContainer appContainer = ApplicationContainer.getInstance();   
+        appContainer.getBean(SimpleMainController.class).start(primaryStage, getParameters());
     }
 
+/*    
     @Override
     public void stop() throws Exception {
      //   weld.shutdown();
@@ -45,8 +41,9 @@ public class SimpleFxLauncher extends Application {
     /**
      * @return the stage
      */
+/*    
     public Stage getStage() {
         return stage;
     }
-    
+*/    
 }

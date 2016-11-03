@@ -7,10 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity 
+@Entity
+@Table(name = "pacientes", schema = "simplesw")
 public class Paciente implements Serializable {    
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

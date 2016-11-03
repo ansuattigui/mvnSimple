@@ -20,7 +20,7 @@ public class FXMLLoaderProducer {
     Instance<Object> instance;
 
     @Produces
-    public FXMLLoader createLoader() {
+    public FXMLLoader fxmlLoader() {
         FXMLLoader loader = new FXMLLoader();
         loader.setControllerFactory(param -> instance.select(param).get());
 

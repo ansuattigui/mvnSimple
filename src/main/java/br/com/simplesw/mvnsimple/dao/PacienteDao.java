@@ -16,12 +16,6 @@ import javax.persistence.TypedQuery;
  */
 public class PacienteDao {
 
-/*    
-    @Inject
-    public PacienteDao() {
-    }
-*/
-    
     private final String QUERY_LISTA_WITH_CODANT = "from Paciente as pac where pac.codAntigo like :codAnt order by pac.nome";
     private final String QUERY_PROX_COD_ANT = "select max(codAntigo) from Paciente as ca";
 
