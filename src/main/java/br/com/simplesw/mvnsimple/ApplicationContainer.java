@@ -30,6 +30,7 @@ public class ApplicationContainer {
         }
         
         this.container = new Weld().initialize();
+        container.
     }
     
      public <T> T getBean(Class<T> type) {
