@@ -9,7 +9,6 @@ import br.com.simplesw.mvnsimple.controller.SimpleMainController;
 import br.com.simplesw.mvnsimple.util.CdiContext;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.jboss.weld.environment.se.events.ContainerInitialized;
 
 /**
  *
