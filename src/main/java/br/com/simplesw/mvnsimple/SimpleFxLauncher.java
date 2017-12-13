@@ -6,9 +6,17 @@
 package br.com.simplesw.mvnsimple;
 
 import br.com.simplesw.mvnsimple.controller.SimpleMainController;
-import br.com.simplesw.mvnsimple.util.CdiContext;
+import com.gluonhq.ignite.guice.GuiceContext;
+import com.google.inject.AbstractModule;
+import java.io.IOException;
+import java.security.Provider.Service;
+import java.util.Arrays;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javax.inject.Inject;
 
 /**
  *
@@ -22,13 +30,28 @@ public class SimpleFxLauncher extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Application.launch(SimpleFxLauncher.class,args);
+        launch(args);
     }    
     
+    private GuiceContext context = new GuiceContext(this, () -> Arrays.asList(new GuiceModule()));
+    
+    @Inject private FXMLLoader fxmlLoader;    
+    
     @Override
-    public void start( final Stage primaryStage) throws Exception {
-        this.stage = primaryStage;
-        CdiContext context = CdiContext.INSTANCE;
+    public void start(Stage primaryStage) throws IOException {
+        
+        context.init();
+        fxmlLoader.setLocation(getViewLocation());
+        Parent view = fxmlLoader.load();
+ 
+        primaryStage.setTitle("Guice Example");
+        primaryStage.setScene(new Scene(view));
+        primaryStage.show();        
+        
+        
+        
+//        this.stage = primaryStage;
+        
         
         SimpleMainController controller = context.getBean(SimpleMainController.class);
         primaryStage.setTitle("Simple");
@@ -48,5 +71,12 @@ public class SimpleFxLauncher extends Application {
     public Stage getStage() {
         return stage;
     }
+    
+
+    class GuiceModule extends AbstractModule {
+        @Override protected void configure() {
+        bind(Service.class).to(Service.class);
+    }
+}    
     
 }
