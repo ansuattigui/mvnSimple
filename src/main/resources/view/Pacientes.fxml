@@ -20,9 +20,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import jidefx.scene.control.field.DateField?>
-<?import jidefx.scene.control.field.FormattedTextField?>
 
-<AnchorPane prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.simplesw.mvnsimple.controller.PacienteController">
+<AnchorPane prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.simplesw.mvnsimple.controller.PacienteController">
 <children>
 <VBox AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <children>
@@ -168,7 +167,7 @@
 <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
 <children>
 <Label text="Nascimento" />
-                                          <DateField fx:id="nascimento" popupButtonVisible="true" prefWidth="120.0" />
+                                          <DateField fx:id="nascimento" popupButtonVisible="true" prefWidth="130.0" regularExpression="" />
 </children>
 </VBox>
 <VBox fillWidth="false" prefHeight="50.0" spacing="4.0">
@@ -334,7 +333,7 @@
 <Label text="CEP" />
                                                             <HBox spacing="2.0">
                                                                <children>
-                                                                  <FormattedTextField fx:id="cep" prefWidth="110.0" />
+                                                                  <TextField fx:id="cep" />
                                                                   <Button fx:id="btnProcuraCep" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#btnProcCepFired" styleClass="botaopq" text="Button">
                                                                      <graphic>
                                                                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">

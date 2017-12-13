@@ -8,6 +8,7 @@ import br.com.simplesw.mvnsimple.enumerated.Oper;
 import br.com.simplesw.mvnsimple.enumerated.Sexo;
 import br.com.simplesw.mvnsimple.enumerated.Status;
 import br.com.simplesw.mvnsimple.modelos.Paciente;
+import br.com.simplesw.mvnsimple.util.CdiContext;
 import br.com.simplesw.mvnsimple.util.DateUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,9 +33,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javax.inject.Inject;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import jidefx.scene.control.field.DateField;
-import jidefx.scene.control.field.FormattedTextField;
 
 /**
  * FXML Controller class
@@ -60,7 +62,7 @@ public class PacienteController extends FxmlController {
     
     @FXML public TextField endereco;             @FXML public TextField numero;
     @FXML public TextField complemento;          @FXML public TextField bairro;    
-    @FXML public FormattedTextField cep;         @FXML public TextField cidade;
+    @FXML public TextField cep;                  @FXML public TextField cidade;
     @FXML public ComboBox uf;                    @FXML public TextField telresidencial;
     @FXML public TextField telcomercial;         @FXML public TextField telcelular;
     @FXML public TextField email; 
@@ -79,9 +81,10 @@ public class PacienteController extends FxmlController {
     private byte[] bFotografia; 
     private Paciente paciente;
     private SimpleObjectProperty<Paciente> sopPaciente;
+    private ObservableList<Paciente> sopPacientes;
     
     @Inject 
-    private PacienteDao dao;
+    private PacienteDao pacientes;
     
     @Inject
     public PacienteController() {
@@ -93,6 +96,8 @@ public class PacienteController extends FxmlController {
         this.oper = Oper.IDLE;
         sopidade = new SimpleObjectProperty<>();
         sopPaciente = new SimpleObjectProperty<>();
+        sopPacientes = FXCollections.observableArrayList();
+        
         listenerIdade();
 
         setToolTips();
@@ -141,7 +146,7 @@ public class PacienteController extends FxmlController {
         });                
     }
     
-/*        
+        
     private void addPacientesListener() { 
         sopPacientes.addListener(new ListChangeListener() {
             @Override
@@ -149,6 +154,16 @@ public class PacienteController extends FxmlController {
                 apagaPaciente();
                 if (sopPacientes.size() > 1) {
                     try {
+                        CdiContext context = CdiContext.INSTANCE;
+                        SelecPacienteController controller = context.getBean(SelecPacienteController.class);                
+                        Stage stage = new Stage();
+                        stage.setTitle("Simple");
+                        stage.setScene(controller.sceneShow(null));
+                        stage.initOwner(SimpleMainController.primaryStage);
+                        stage.initModality(Modality.WINDOW_MODAL);
+                        stage.showAndWait();
+                        
+                        /*
                         String fxmlGUI = "fxml/SelecPaciente.fxml";
                         String titleGUI = "Selecionar Paciente";
                         StageStyle fxmlStyle = StageStyle.UTILITY;
@@ -157,6 +172,8 @@ public class PacienteController extends FxmlController {
                         SelecPacienteController controller = (SelecPacienteController) selecPaciente.getController();
                         controller.setPaciente(sopPacientes);
                         selecPaciente.showAndWait();
+                        */
+                        
                         if (controller.closeModal) {
                             paciente = controller.tabelaPacientes.getSelectionModel().getSelectedItem();
                             sopPaciente.set(paciente);
@@ -171,7 +188,7 @@ public class PacienteController extends FxmlController {
             }
         });        
     }  
-*/
+
         
     private void initCombos() {
         initComboStatus();
@@ -301,40 +318,36 @@ public class PacienteController extends FxmlController {
     }
             
     public void confPacienteFired(ActionEvent event) {          
-/*        
-        if (status==Oper.INSERTING) {            
-            EntityManager manager = JPAUtil.getEntityManager();
-            manager.getTransaction().begin();  
+        
+        if (oper==Oper.INSERTING) {            
+//            EntityManager manager = JPAUtil.getEntityManager();
+//            manager.getTransaction().begin();  
             this.paciente = new Paciente();
             if (preenchePaciente()) {   
-                if (Pacientes.novoPaciente(this.paciente,manager)) {
-                    manager.getTransaction().commit();
-                    manager.close();     
-                    ShowDialog("S", "Paciente incluido com sucesso", null,this.getStage());                    
-                    status = Oper.SHOWING;
+                if (pacientes.criaPaciente(paciente)) {
+//                    ShowDialog("S", "Paciente incluido com sucesso", null,this.getStage());                    
+                    oper = Oper.SHOWING;
                 } else {
-                    ShowDialog("EX", "Não foi possível incluir o paciente", null,this.getStage());
-                    manager.getTransaction().rollback();
-                    manager.close();     
+//                    ShowDialog("EX", "Não foi possível incluir o paciente", null,this.getStage());
                     //status = Oper.INSERTING;
                 }    
             }
         } else {
             if (preenchePaciente()) {
-                if (Pacientes.atualizaPaciente(paciente)) {
-                    ShowDialog("S", "Paciente atualizado com sucesso", null,this.getStage());                    
-                    status = Oper.SHOWING;
+                if (pacientes.atualizaPaciente(paciente)) {
+//                    ShowDialog("S", "Paciente atualizado com sucesso", null,this.getStage());                    
+                    oper = Oper.SHOWING;
                 } else {
-                    ShowDialog("EX", "Não foi possível atualizar o paciente", null,this.getStage());
+                    //ShowDialog("EX", "Não foi possível atualizar o paciente", null,this.getStage());
                     //status = Oper.INSERTING;
                 }
-                status = Oper.SHOWING;
+                //oper = Oper.SHOWING;
             } else return;
         }
         
         setButtons();      
         habilEdicaoFired();
-*/
+
     }
     
     public void cancPacienteFired(ActionEvent event) {
@@ -546,7 +559,7 @@ public class PacienteController extends FxmlController {
     }
         
     public void btnProcIdFired(ActionEvent event) throws Exception {
-        sopPaciente.set(dao.getPacienteWithId(Integer.parseInt(id.getText())));
+        sopPaciente.set(pacientes.getPacienteWithId(Integer.parseInt(id.getText())));
     }    
     
     public void btnProcCodAntFired(ActionEvent event) throws Exception {
@@ -564,7 +577,7 @@ public class PacienteController extends FxmlController {
         String pac = nome.getText();
         if (!pac.isEmpty()) {
             pac = "%" + pac.replace(" ", "%");            
-//            sopPacientes.setAll(FXCollections.observableArrayList(Pacientes.getObsListaWithNome(nome)));
+            sopPacientes.setAll(FXCollections.observableArrayList(pacientes.getObsListaWithNome(pac)));
         }
     } 
     
@@ -626,7 +639,7 @@ public class PacienteController extends FxmlController {
 //        this.dataPrimConsulta.clear();
         this.status.getSelectionModel().select(-1);
         this.cadastro.getSelectionModel().select(-1);
-        this.imageFotografia.setImage(null);
+//        this.imageFotografia.setImage(null);
     }
     
     public void habilEdicaoFired() {

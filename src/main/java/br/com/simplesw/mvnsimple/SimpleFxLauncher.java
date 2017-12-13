@@ -22,11 +22,11 @@ public class SimpleFxLauncher extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        SimpleFxLauncher.launch(args);
+        Application.launch(SimpleFxLauncher.class,args);
     }    
     
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start( final Stage primaryStage) throws Exception {
         this.stage = primaryStage;
         CdiContext context = CdiContext.INSTANCE;
         

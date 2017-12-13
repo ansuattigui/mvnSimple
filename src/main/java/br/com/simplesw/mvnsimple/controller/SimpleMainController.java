@@ -33,7 +33,7 @@ public class SimpleMainController extends FxmlController {
     @FXML public TitledPane tpaneAgenda;
     @FXML public Button btnAgenda;
     
-    public Stage primaryStage;
+    public static Stage primaryStage;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
